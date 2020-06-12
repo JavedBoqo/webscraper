@@ -20,7 +20,6 @@ const csvWriter = createCsvWriter({
       {id: 'dayOfWeekName', title: 'dayOfWeekName'},	
       {id: 'dayOfYear', title: 'dayOfYear'},	
       {id: 'dayOfMonth', title: 'dayOfMonth'}
-  
     ]
   });
 let csvData = [];
@@ -36,13 +35,13 @@ request('http://api.scrapestack.com/scrape?access_key=db1e03753237c03082a249ce4a
     //   console.log('elTest', elTest[0].data);
     var matchX = elTest[0].data.match(/var docs_json = (.*)}}';/g);
     var data=matchX[0];
-    console.log('matchX', data);
+    // console.log('matchX', data);
     data=data.replace("var docs_json = '","");
     data=data.replace("';","");
     data=data.trim();
     // console.log('matchX', data);
     let fullObject=JSON.parse(data);
-    console.log('final', fullObject);
+    // console.log('final', fullObject);
 
     
     for (item1 in fullObject) {
@@ -56,10 +55,14 @@ request('http://api.scrapestack.com/scrape?access_key=db1e03753237c03082a249ce4a
             lastdata.map((i)=>{
                 if(i.attributes.name=="Past Wait") {
                     sourceId=i.attributes.data_source.id;
-                    console.log('sourceid',sourceId);
-                }
-                if(sourceId > 0 && i.id==sourceId) {
-                    console.log('data is',i.attributes.data);
+                    // console.log('sourceid',sourceId);
+                }});
+if(sourceId > 0) {
+            lastdata.map((i)=>{
+                // console.log('i.id==sourceId',i.id,sourceId);
+                //if(sourceId > 0 && i.id==sourceId) {
+                    if(i.id==sourceId) {
+                    // console.log('data is',i.attributes.data);
                     const mainData = i.attributes.data;
                     const time=mainData.time;
                     const x=mainData.x;
@@ -70,14 +73,14 @@ request('http://api.scrapestack.com/scrape?access_key=db1e03753237c03082a249ce4a
                         // console.log('item',item);
                         var spt = item.split(':');
                         if(previousHour != spt[0]) {
-                        console.log('Hour ',spt[0]);
+                        // console.log('Hour ',spt[0]);
                         // console.log(' with index ',i);
-                        console.log('having Wait time ',y[i]);
+                        // console.log('having Wait time ',y[i]);
                         
                         let timestamp=x[i];
                         timestamp = timestamp.toString().substring(10, 0);
                         // console.log('timestamp',timestamp);
-                        console.log(' and timestamp is ',moment.unix(timestamp).format("DD-MM-YYYY hh:mm:ss"));
+                        // console.log(' and timestamp is ',moment.unix(timestamp).format("DD-MM-YYYY hh:mm:ss"));
                         
                         const hour = spt[0];
                         const waitTime =y[i];
@@ -112,6 +115,7 @@ request('http://api.scrapestack.com/scrape?access_key=db1e03753237c03082a249ce4a
                     sourceId=0;
                 }    
             });
+        }
         }   
     }
     }
